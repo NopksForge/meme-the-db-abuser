@@ -3,11 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { NormalSlider } from "./components/normal_slider/normal_slider";
 import { AlphabetOrderSlider } from "./components/alphabet_order_slider/alphabet_order_slider";
 import { Menu } from "./components/menu/menu";
+import { RandomButton } from "./components/random_button/random_buttom";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
-  const [mode, setMode] = useState<"normal" | "alphabet">("alphabet");
+  const [mode, setMode] = useState<"normal" | "alphabet" | "random">("alphabet");
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
   useEffect(() => {
@@ -57,10 +58,14 @@ export default function Home() {
             className="hidden"
           />
 
-          {mode === "normal" ? (
+          {mode === "normal" && (
             <NormalSlider value={volume} onChange={handleVolumeChange} />
-          ) : (
+          )}
+          {mode === "alphabet" && (
             <AlphabetOrderSlider value={volume} onChange={handleVolumeChange} />
+          )}
+          {mode === "random" && (
+            <RandomButton value={volume} onRandom={handleVolumeChange} />
           )}
         </section>
       </main>
