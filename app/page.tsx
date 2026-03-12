@@ -7,14 +7,14 @@ import { RandomButton } from "./components/random_button/random_buttom";
 import { RequestForm } from "./components/request_form/request_form";
 import { XoGame } from "./components/xo/xo";
 import { DndDiceRoll } from "./components/roll_20/roll_20";
+import { HorseRace } from "./components/horse_race/horse_race";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
-  const [mode, setMode] =
-    useState<"normal" | "alphabet" | "random" | "request" | "xo" | "dnd">(
-      "normal",
-    );
+  const [mode, setMode] = useState<
+    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race"
+  >("normal");
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
   useEffect(() => {
@@ -81,6 +81,9 @@ export default function Home() {
           )}
           {mode === "dnd" && (
             <DndDiceRoll value={volume} onChange={handleVolumeChange} />
+          )}
+          {mode === "horse_race" && (
+            <HorseRace value={volume} onChange={handleVolumeChange} />
           )}
         </section>
       </main>
