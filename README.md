@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## [MEME THE DB ABUSER](https://meme-the-db-abuser.vercel.app/) 🎚️
 
-## Getting Started
 
-First, run the development server:
+**Genre**: Sound Panel • UX Hellscape  
+**Players**: Solo (for now)
+
+---
+
+### What is this? 🤔
+
+**MEME THE DB ABUSER** is actually a **tribute to the worst possible sound settings panel UX** you can imagine.
+Instead of clean sliders and friendly toggles, this project embraces **hostile interfaces**, **confusing controls**, and **audio chaos**.
+This is a **toy project** for exploring extreme/bad UX ideas, especially for sound/audio control panels, presented like an unhinged indie game. 🎮
+
+---
+
+### Example Highlights 💥
+
+- **Alphabet Order Sliders**
+
+  ![Alphabet Order Sliders sample](./docs/sample_alp.gif)
+  
+  Sliders that refuse to follow normal logic—jumping unexpectedly, snapping to incorrect values, or secretly altering other settings while being dragged.
+
+
+- **DnD Dice Roll**
+  
+  ![Dnd sample](./docs/sample_dnd.gif)
+  
+  Engage in a dice-based duel with a random monster—win to unlock a volume change! 🎲
+
+Just a sample so things don’t get spoiled.  
+**See for yourself!** 👉 https://meme-the-db-abuser.vercel.app/
+
+---
+
+### Tech Stack 🛠️
+
+- **Framework**: Next.js / React (app router)  
+- **Language**: TypeScript  
+- **Runtime**: Node.js  
+- **Platform**: Local dev, container-friendly
+
+---
+
+### How to Run (local) 🖥️
+
+**Prerequisites**
+
+- Node.js (LTS recommended)
+- pnpm / npm / yarn (choose your poison)
+
+**Install & Run**
 
 ```bash
-npm run dev
-# or
+# install deps
+yarn install
+
+# start dev server
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open `http://localhost:3000` and start fighting with the most cursed sound panel UX you’ve seen today. 😈
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Intended Use (and Non-Use) 📌
 
-## Learn More
+- **Great for**:
+  - Exploring extreme/bad UX patterns for sound settings  
+  - Using as a conversation piece or demo in talks  
+  - Inspiring “what NOT to do” lists for real products
 
-To learn more about Next.js, take a look at the following resources:
+- **Not for**:
+  - Actual audio control on a real system  
+  - Accessibility-friendly UX  
+  - People who like intuitive interfaces
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Roadmap (Chaos Backlog) 📉
 
-## Deploy on Vercel
+- More cursed ideas (graph-based routing, fake mixers, etc.)  
+- Game mode: user gets a target volume value; random 10 modes for record time  
+- Theme light/dark switch
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Contributing 💡
+
+If you have an evil idea for a new way to design a sound panel that makes no sense (purely for educational purposes, or just for the meme), feel free to open an issue or PR.
+
+**Rule #1**: Don’t be boring.  
+**Rule #2**: Don’t accidentally make this good UX.
+
+---
+
+### License
+
+TBD. Until then, treat this as “look, don’t ship to production.”
+
