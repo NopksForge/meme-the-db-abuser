@@ -66,7 +66,6 @@ export function DndDiceRoll({ value, onChange }: DndDiceRollProps) {
   );
 
   const handleNextEnemy = () => {
-    if (!hasBattled) return;
     setEnemy(createRandomEnemy());
     setLastRoll(null);
     setLastOutcome(null);
@@ -124,19 +123,14 @@ export function DndDiceRoll({ value, onChange }: DndDiceRollProps) {
             <div>
               <p className="text-sm font-semibold">{enemy.name}</p>
               <p className="text-[11px] text-zinc-400">
-                STR {enemy.str} • Reward {enemy.reward}% volume
+                Reward {enemy.reward}% volume
               </p>
             </div>
           </div>
-          {hasBattled && (
-            <button
-              type="button"
-              onClick={handleNextEnemy}
-              className="rounded-full border border-zinc-700 px-3 py-1 text-[10px] font-medium text-zinc-200 hover:border-zinc-500 hover:bg-zinc-800"
-            >
-              New enemy
-            </button>
-          )}
+          <div className="flex flex-col items-center rounded-lg border border-zinc-600 bg-zinc-800 px-3 py-2">
+            <span className="text-[10px] text-zinc-400">STR</span>
+            <span className="text-xl font-bold text-zinc-100">{enemy.str}</span>
+          </div>
         </div>
       </div>
 
@@ -153,11 +147,11 @@ export function DndDiceRoll({ value, onChange }: DndDiceRollProps) {
         </div>
         <button
           type="button"
-          onClick={handleRoll}
-          disabled={isRolling || hasBattled}
+          onClick={hasBattled ? handleNextEnemy : handleRoll}
+          disabled={isRolling}
           className="w-full rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-70"
         >
-          Roll d20
+          {hasBattled ? "New Enemy" : "Roll d20"}
         </button>
         <div className="rounded-lg border border-zinc-800 bg-zinc-900/70 p-3 text-xs text-zinc-200">
           {lastRoll === null ? (
