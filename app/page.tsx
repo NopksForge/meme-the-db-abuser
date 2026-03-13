@@ -8,12 +8,13 @@ import { RequestForm } from "./components/request_form/request_form";
 import { XoGame } from "./components/xo/xo";
 import { DndDiceRoll } from "./components/roll_20/roll_20";
 import { HorseRace } from "./components/horse_race/horse_race";
+import { Tinder } from "./components/tinder/tinder";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
   const [mode, setMode] = useState<
-    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race"
+    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race" | "tinder"
   >("normal");
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
@@ -84,6 +85,9 @@ export default function Home() {
           )}
           {mode === "horse_race" && (
             <HorseRace value={volume} onChange={handleVolumeChange} />
+          )}
+          {mode === "tinder" && (
+            <Tinder value={volume} onChange={handleVolumeChange} />
           )}
         </section>
       </main>
