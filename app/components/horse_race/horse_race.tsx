@@ -48,30 +48,37 @@ export function HorseRace({ value, onChange }: HorseRaceProps) {
     const betVolume = Math.min(1, Math.max(0, betValue / 100));
     let newVolume = value;
 
+    const multipliers = [1, 0.5, 0, -0.5, -1];
+    const multiplier = multipliers[position] ?? -1;
+    const change = betVolume * multiplier;
+    newVolume = Math.min(1, Math.max(0, value + change));
+
     if (position === 0) {
-      newVolume = betVolume;
       setMessage(
-        `Your horse won! Volume set to ${Math.round(newVolume * 100)}%.`,
+        `Your horse won! +${Math.round(change * 100)}% volume`,
+      );
+    } else if (position === 1) {
+      setMessage(
+        `Your horse finished #2. +${Math.round(change * 100)}% volume`,
+      );
+    } else if (position === 2) {
+      setMessage(
+        `Your horse finished #3. No change.`,
       );
     } else {
-      const penaltyFactors = [0, 0.25, 0.5, 0.75, 1];
-      const factor = penaltyFactors[position] ?? 1;
-      const penaltyAmount = betVolume * factor;
-      newVolume = Math.max(0, value - penaltyAmount);
-
-      const penaltyPercent = Math.round(factor * 100);
       setMessage(
-        `Your horse finished #${position + 1}. Volume decreased by ${penaltyPercent}%.`,
+        `Your horse finished #${position + 1}. ${Math.round(change * 100)}% volume`,
       );
     }
 
-    onChange(newVolume);
     setIsRacing(false);
 
     if (raceIntervalRef.current !== null) {
       window.clearInterval(raceIntervalRef.current);
       raceIntervalRef.current = null;
     }
+
+    setTimeout(() => onChange(newVolume), 0);
   };
 
   useEffect(
@@ -142,7 +149,7 @@ export function HorseRace({ value, onChange }: HorseRaceProps) {
           Horse Race
         </p>
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Pick a horse, bet , GO! 🐎 Win = volume up! Lose = RIP volume.
+          Pick a horse, bet , GO!
         </p>
       </div>
 
