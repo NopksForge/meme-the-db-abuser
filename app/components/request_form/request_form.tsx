@@ -8,8 +8,18 @@ const INITIAL_FORM = {
   age: "",
   email: "",
   telephone: "",
+  reason: "",
   volume: "50",
 };
+
+const CONSENTS = [
+  "I accept that my eardrums are my own responsibility",
+  "I understand this form is completely unnecessary but I filled it anyway",
+  "I promise not to sue if my neighbors call the police",
+] as const;
+
+const TRAP_CONSENT =
+  "I have read everything above and would like to reset the form";
 
 type RequestFormProps = {
   /** Called with requested volume as 0–1 when the form is submitted and valid */
@@ -47,14 +57,27 @@ function validate(form: typeof INITIAL_FORM): FieldErrors {
     errors.telephone = "Valid number (6+ digits)";
   }
 
+  const reason = form.reason.trim();
+  if (!reason) errors.reason = "Required";
+  else if (reason.length < 150) {
+    errors.reason = `At least 150 characters (${reason.length}/150)`;
+  }
+
   return errors;
 }
 
 export function RequestForm({ onSubmit }: RequestFormProps) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [consents, setConsents] = useState<boolean[]>(
+    CONSENTS.map(() => false),
+  );
+  const [consentError, setConsentError] = useState(false);
+  const [showTrapToast, setShowTrapToast] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof FieldErrors]) {
@@ -62,27 +85,45 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
     }
   };
 
+  const toggleConsent = (index: number) => {
+    setConsents((prev) => prev.map((c, i) => (i === index ? !c : c)));
+    setConsentError(false);
+  };
+
+  const handleTrapConsent = () => {
+    setForm(INITIAL_FORM);
+    setConsents(CONSENTS.map(() => false));
+    setErrors({});
+    setConsentError(false);
+    setShowTrapToast(true);
+    setTimeout(() => setShowTrapToast(false), 3000);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const nextErrors = validate(form);
     setErrors(nextErrors);
 
-    if (Object.keys(nextErrors).length > 0) {
-      return; // do not adjust volume
+    const allConsentsChecked = consents.every(Boolean);
+    if (!allConsentsChecked) {
+      setConsentError(true);
+    }
+
+    if (Object.keys(nextErrors).length > 0 || !allConsentsChecked) {
+      return;
     }
 
     const numeric = parseInt(form.volume, 10);
     const normalized = Math.max(0, Math.min(1, numeric / 100));
     onSubmit(normalized);
     setForm(INITIAL_FORM);
+    setConsents(CONSENTS.map(() => false));
     setErrors({});
+    setConsentError(false);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 text-xs text-zinc-100"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4 text-xs text-zinc-100">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="space-y-1">
           <span className="text-[11px] text-zinc-400">Name</span>
@@ -150,14 +191,29 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             <p className="text-[10px] text-red-400">{errors.telephone}</p>
           )}
         </label>
+
+        <label className="space-y-1 sm:col-span-2">
+          <span className="flex items-center justify-between text-[11px] text-zinc-400">
+            <span>Reason for change request</span>
+            <span className="text-zinc-500">{`${form.reason.length}/150`}</span>
+          </span>
+          <textarea
+            name="reason"
+            value={form.reason}
+            onChange={handleChange}
+            rows={3}
+            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 resize-none ${errors.reason ? "border-red-500/80" : "border-zinc-700"}`}
+          />
+          {errors.reason && (
+            <p className="text-[10px] text-red-400">{errors.reason}</p>
+          )}
+        </label>
       </div>
 
       <div className="space-y-2">
         <label className="flex items-center justify-between text-[11px] text-zinc-400">
           <span>Volume requested (0–100%)</span>
-          <span className="text-zinc-200">
-            {form.volume || "?"}%
-          </span>
+          <span className="text-zinc-200">{form.volume || "?"}%</span>
         </label>
         <input
           type="range"
@@ -170,13 +226,52 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
         />
       </div>
 
+      <div className="space-y-2 pt-2 border-t border-zinc-700">
+        <p className="text-[11px] text-zinc-400">Terms & Conditions</p>
+        {CONSENTS.map((text, i) => (
+          <label
+            key={i}
+            className="flex items-start gap-2 cursor-pointer select-none"
+          >
+            <input
+              type="checkbox"
+              checked={consents[i]}
+              onChange={() => toggleConsent(i)}
+              className="mt-0.5 accent-zinc-100"
+            />
+            <span className="text-[11px] text-zinc-300">{text}</span>
+          </label>
+        ))}
+        <label className="flex items-start gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={false}
+            onChange={handleTrapConsent}
+            className="mt-0.5 accent-zinc-100"
+          />
+          <span className="text-[11px] text-zinc-300">
+            I have read everything above and{" "}
+            <span
+              className={`transition-colors duration-300 ${showTrapToast ? "bg-red-500 text-white px-1 rounded" : ""}`}
+            >
+              would like to reset the form
+            </span>
+          </span>
+        </label>
+        {consentError && (
+          <p className="text-[10px] text-red-400">
+            You must agree to (almost) all terms and conditions
+          </p>
+        )}
+      </div>
+
       <button
         type="submit"
         className="w-full rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-900 transition-colors hover:bg-white"
       >
         Submit request
       </button>
+
     </form>
   );
 }
-
