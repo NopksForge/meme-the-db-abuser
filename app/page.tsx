@@ -9,6 +9,7 @@ import { XoGame } from "./components/xo/xo";
 import { DndDiceRoll } from "./components/roll_20/roll_20";
 import { HorseRace } from "./components/horse_race/horse_race";
 import { Tinder } from "./components/tinder/tinder";
+import { Footer } from "./components/footer/footer";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -90,6 +91,8 @@ export default function Home() {
             <Tinder value={volume} onChange={handleVolumeChange} />
           )}
         </section>
+
+        <Footer />
       </main>
     </div>
   );
