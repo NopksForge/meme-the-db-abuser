@@ -12,13 +12,14 @@ import { Tinder } from "./components/tinder/tinder";
 import { Plinko } from "./components/plinko/plinko";
 import { Snake } from "./components/snake/snake";
 import { Pair } from "./components/pair/pair";
+import { HoldCar } from "./components/hold_car/hold_car";
 import { Footer } from "./components/footer/footer";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
   const [mode, setMode] = useState<
-    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race" | "tinder" | "plinko" | "snake" | "pair"
+    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race" | "tinder" | "plinko" | "snake" | "pair" | "car"
   >("normal");
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
@@ -101,6 +102,9 @@ export default function Home() {
           )}
           {mode === "pair" && (
             <Pair value={volume} onChange={handleVolumeChange} />
+          )}
+          {mode === "car" && (
+            <HoldCar value={volume} onChange={handleVolumeChange} />
           )}
         </section>
 

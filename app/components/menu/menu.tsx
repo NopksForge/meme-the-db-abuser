@@ -9,7 +9,8 @@ type SliderMode =
   | "tinder"
   | "plinko"
   | "snake"
-  | "pair";
+  | "pair"
+  | "car";
 
 type MenuProps = {
   activeMode: SliderMode;
@@ -70,6 +71,11 @@ const ITEMS: { id: SliderMode; label: string; description: string }[] = [
   {
     id: "pair",
     label: "Pair",
+    description: "",
+  },
+  {
+    id: "car",
+    label: "Car",
     description: "",
   },
 ];
