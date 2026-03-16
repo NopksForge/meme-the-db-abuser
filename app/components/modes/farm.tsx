@@ -601,7 +601,7 @@ export function Farm({ value, onChange }: FarmProps) {
                     }`}
                   >
                     <span className="text-base leading-none">{emoji}</span>
-                    {isDry && <span className="absolute -right-1 -top-1 text-[9px] leading-none">🏜</span>}
+                    {isDry && <span className="absolute -right-1 -top-1 text-[12px] leading-none">😩</span>}
                     {cell && cell.stage !== "grown" && (
                       <div className="absolute bottom-0.5 left-0.5 right-0.5 space-y-px">
                         <WaterBar value={cell.water} max={cfg!.maxWater} />
