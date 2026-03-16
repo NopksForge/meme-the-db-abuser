@@ -1,20 +1,20 @@
  "use client";
 import { useEffect, useRef, useState } from "react";
-import { NormalSlider } from "./components/normal_slider/normal_slider";
-import { AlphabetOrderSlider } from "./components/alphabet_order_slider/alphabet_order_slider";
+import { NormalSlider } from "./components/modes/normal_slider";
+import { AlphabetOrderSlider } from "./components/modes/alphabet_order_slider";
 import { Menu } from "./components/menu/menu";
-import { RandomButton } from "./components/random_button/random_buttom";
-import { RequestForm } from "./components/request_form/request_form";
-import { XoGame } from "./components/xo/xo";
-import { DndDiceRoll } from "./components/roll_20/roll_20";
-import { HorseRace } from "./components/horse_race/horse_race";
-import { Tinder } from "./components/tinder/tinder";
-import { Plinko } from "./components/plinko/plinko";
-import { Snake } from "./components/snake/snake";
-import { Pair } from "./components/pair/pair";
-import { HoldCar } from "./components/hold_car/hold_car";
-import { Audition } from "./components/audition/audition";
-import { Farm } from "./components/farm/farm";
+import { RandomButton } from "./components/modes/random_button";
+import { RequestForm } from "./components/modes/request_form";
+import { XoGame } from "./components/modes/xo";
+import { DndDiceRoll } from "./components/modes/roll_20";
+import { HorseRace } from "./components/modes/horse_race";
+import { Tinder } from "./components/modes/tinder";
+import { Plinko } from "./components/modes/plinko";
+import { Snake } from "./components/modes/snake";
+import { Pair } from "./components/modes/pair";
+import { HoldCar } from "./components/modes/hold_car";
+import { Audition } from "./components/modes/audition";
+import { Farm } from "./components/modes/farm";
 import { Footer } from "./components/footer/footer";
 
 export default function Home() {
