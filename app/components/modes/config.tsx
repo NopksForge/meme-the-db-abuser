@@ -13,6 +13,7 @@ import { Pair } from "./pair";
 import { HoldCar } from "./hold_car";
 import { Audition } from "./audition";
 import { Farm } from "./farm";
+import { Fishing } from "./fishing";
 
 export type SliderMode =
   | "normal"
@@ -28,7 +29,8 @@ export type SliderMode =
   | "pair"
   | "car"
   | "audition"
-  | "farm";
+  | "farm"
+  | "fishing";
 
 export type ModeDefinition = {
   id: SliderMode;
@@ -148,6 +150,14 @@ export const MODES: ModeDefinition[] = [
     description: "",
     render: (volume, handleVolumeChange) => (
       <Farm value={volume} onChange={handleVolumeChange} />
+    ),
+  },
+  {
+    id: "fishing",
+    label: "Fishing",
+    description: "",
+    render: (volume, handleVolumeChange) => (
+      <Fishing value={volume} onChange={handleVolumeChange} />
     ),
   },
 ];
