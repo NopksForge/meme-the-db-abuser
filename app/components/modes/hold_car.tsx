@@ -10,9 +10,8 @@ type HoldCarProps = {
 const MAX_HOLD_S = 2.5;
 const MAX_SPEED = 420;
 const DECELERATION = 180;
-const MAX_DISTANCE_PX = 420; // 100% volume; past this = mute
+const BASE_MAX_DISTANCE_PX = 420; // 100% volume; past this = mute
 const MUTE_ZONE_PX = 80;
-const TRACK_WIDTH_PX = MAX_DISTANCE_PX + MUTE_ZONE_PX;
 // Scale labels: positions = (pct / 100) * MAX_DISTANCE_PX
 const SCALE_PERCENTS = [0, 25, 50, 75, 100] as const;
 
@@ -23,10 +22,14 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(0);
   const [isMoving, setIsMoving] = useState(false);
+  const [maxDistancePx, setMaxDistancePx] = useState(BASE_MAX_DISTANCE_PX);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const lastTimeRef = useRef<number>(0);
   const rafRef = useRef<number>(0);
   const holdRafRef = useRef<number>(0);
   const mutedByOvershootRef = useRef(false); // only show "Mute" when user rolled past 100%
+
+  const trackWidthPx = maxDistancePx + MUTE_ZONE_PX;
 
   const chargePercent =
     holdStart && holding
@@ -66,6 +69,40 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
     setIsMoving(true);
   }, [holding, holdStart]);
 
+  // Responsively adjust max travel distance based on container width
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const el = containerRef.current;
+
+    const updateMaxDistance = (width: number) => {
+      // Use the full inner width of the card (minus the `left-4 right-4` padding)
+      // so the road + mute zone fill the track with no extra gap.
+      const innerWidth = Math.max(0, width - 32); // 16px left + 16px right
+      const clampedInner = Math.max(
+        200,
+        Math.min(BASE_MAX_DISTANCE_PX + MUTE_ZONE_PX, innerWidth)
+      );
+      const nextMaxDistance = Math.max(120, clampedInner - MUTE_ZONE_PX);
+
+      setMaxDistancePx(nextMaxDistance);
+    };
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === el) {
+          updateMaxDistance(entry.contentRect.width);
+        }
+      }
+    });
+
+    observer.observe(el);
+    // Initialize immediately with the current width.
+    updateMaxDistance(el.getBoundingClientRect().width);
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!isMoving) return;
 
@@ -75,7 +112,7 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
       const { position: p, speed: s } = driveRef.current;
 
       if (s <= 0) {
-        const volume = p <= MAX_DISTANCE_PX ? p / MAX_DISTANCE_PX : 0;
+        const volume = p <= maxDistancePx ? p / maxDistancePx : 0;
         mutedByOvershootRef.current = volume === 0;
         onChange(volume);
         setIsMoving(false);
@@ -89,7 +126,8 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
       setSpeed(newSpeed);
 
       if (newSpeed <= 0) {
-        const volume = newPosition <= MAX_DISTANCE_PX ? newPosition / MAX_DISTANCE_PX : 0;
+        const volume =
+          newPosition <= maxDistancePx ? newPosition / maxDistancePx : 0;
         mutedByOvershootRef.current = volume === 0;
         onChange(volume);
         setIsMoving(false);
@@ -100,16 +138,16 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [isMoving, onChange]);
+  }, [isMoving, maxDistancePx, onChange]);
 
   const displayPosition = isMoving ? position : 0;
   const isMuted =
     isMoving
-      ? position > MAX_DISTANCE_PX
+      ? position > maxDistancePx
       : value === 0 && mutedByOvershootRef.current;
   const volumePercent = isMoving
-    ? position <= MAX_DISTANCE_PX
-      ? (position / MAX_DISTANCE_PX) * 100
+    ? position <= maxDistancePx
+      ? (position / maxDistancePx) * 100
       : 0
     : value * 100;
   const volumeInt = Math.round(volumePercent);
@@ -133,14 +171,14 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
       </p>
 
       <div
+        ref={containerRef}
         className="relative h-28 overflow-visible rounded-xl bg-zinc-200/80 dark:bg-zinc-700/50 px-3 py-2"
-        style={{ minWidth: TRACK_WIDTH_PX + 24 }}
       >
         {/* Road: volume zone (0–100%) + mute zone */}
-        <div className="absolute bottom-8 left-3 right-3 flex">
+        <div className="absolute bottom-8 left-5 right-5 flex">
           <div
             className="relative h-2 rounded-l-full bg-zinc-400/50 dark:bg-zinc-600/50"
-            style={{ width: MAX_DISTANCE_PX }}
+            style={{ width: maxDistancePx }}
           />
           <div
             className="h-2 rounded-r-full bg-red-400/60 dark:bg-red-600/50"
@@ -149,12 +187,12 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
           />
         </div>
         {/* Scale ticks and labels: positions from MAX_DISTANCE_PX */}
-        <div className="absolute bottom-0 left-3 flex text-[10px] text-zinc-500 dark:text-zinc-400">
+        <div className="absolute bottom-0 left-5 flex text-[10px] text-zinc-500 dark:text-zinc-400">
           {SCALE_PERCENTS.map((pct) => (
             <div
               key={pct}
               className="absolute flex flex-col items-center -translate-x-1/2"
-              style={{ left: (pct / 100) * MAX_DISTANCE_PX }}
+              style={{ left: (pct / 100) * maxDistancePx }}
             >
               <div className="w-px h-1.5 bg-zinc-500 dark:bg-zinc-500" />
               <span className="mt-0.5 font-medium">{pct}%</span>
@@ -162,7 +200,7 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
           ))}
           <div
             className="absolute flex flex-col items-center -translate-x-1/2"
-            style={{ left: MAX_DISTANCE_PX + MUTE_ZONE_PX / 2 }}
+            style={{ left: maxDistancePx + MUTE_ZONE_PX / 2 }}
           >
             <div className="w-px h-1.5 bg-red-500 dark:bg-red-500" />
             <span className="mt-0.5 font-medium text-red-600 dark:text-red-400">Mute</span>
@@ -172,7 +210,7 @@ export function HoldCar({ value, onChange }: HoldCarProps) {
         <div
           className="absolute bottom-10 transition-none"
           style={{
-            left: 12 + Math.min(displayPosition, TRACK_WIDTH_PX),
+            left: 20 + Math.min(displayPosition, trackWidthPx),
             transform: "translateX(0)",
           }}
         >
