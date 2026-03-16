@@ -14,13 +14,14 @@ import { Snake } from "./components/snake/snake";
 import { Pair } from "./components/pair/pair";
 import { HoldCar } from "./components/hold_car/hold_car";
 import { Audition } from "./components/audition/audition";
+import { Farm } from "./components/farm/farm";
 import { Footer } from "./components/footer/footer";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
   const [mode, setMode] = useState<
-    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race" | "tinder" | "plinko" | "snake" | "pair" | "car" | "audition"
+    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race" | "tinder" | "plinko" | "snake" | "pair" | "car" | "audition" | "farm"
   >("normal");
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
@@ -109,6 +110,9 @@ export default function Home() {
           )}
           {mode === "audition" && (
             <Audition value={volume} onChange={handleVolumeChange} />
+          )}
+          {mode === "farm" && (
+            <Farm value={volume} onChange={handleVolumeChange} />
           )}
         </section>
 
