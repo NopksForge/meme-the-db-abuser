@@ -196,6 +196,21 @@ export function Audition({ value, onChange }: AuditionProps) {
         </p>
       </div>
 
+      {/* Dance cat — playback speed scales with volume */}
+      <div className="flex justify-center">
+        <video
+          src="/dance_cat.webm"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="h-28 w-auto"
+          ref={(el) => {
+            if (el) el.playbackRate = Math.max(0.1, 0.2 + value * 1.8);
+          }}
+        />
+      </div>
+
 
       {/* System arrow sequence */}
       <div className="rounded-xl border border-zinc-300 bg-zinc-200/80 px-4 py-3 dark:border-zinc-600 dark:bg-zinc-800/80">
@@ -237,10 +252,6 @@ export function Audition({ value, onChange }: AuditionProps) {
             </span>
           ))}
         </div>
-        <p className="mt-2 text-[10px] text-zinc-500 dark:text-zinc-400">
-          Use arrow keys. Score counts only green. Progress: {userIndex}/
-          {sequence.length}
-        </p>
       </div>
 
       {/* Toast notification */}
