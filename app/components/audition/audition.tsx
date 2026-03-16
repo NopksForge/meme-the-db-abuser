@@ -98,7 +98,7 @@ export function Audition({ value, onChange }: AuditionProps) {
           onChange(newVolume);
           setLastHit("miss");
           setFeedback(
-            `No submission that round — volume -${VOLUME_STEP * SEQ_LENGTH * 100}% (now ${Math.round(
+            `No step → volume -${VOLUME_STEP * SEQ_LENGTH * 100}% (now ${Math.round(
               newVolume * 100,
             )}%).`,
           );
@@ -138,7 +138,7 @@ export function Audition({ value, onChange }: AuditionProps) {
           setFeedback(
             correctCount > 0
               ? `${correctCount} arrow${correctCount !== 1 ? "s" : ""} correct → +${correctCount * (VOLUME_STEP * 100)}% volume (now ${Math.round(newVolume * 100)}%)`
-              : "Miss all — no arrows correct. Volume -6% on next ball loop.",
+              : "Miss all → Volume -6%",
           );
           spaceLockedRef.current = true;
           pendingInZoneResetRef.current = true;
@@ -148,7 +148,7 @@ export function Audition({ value, onChange }: AuditionProps) {
           setPositionStatus(Array(SEQ_LENGTH).fill("wrong"));
           setLastHit("miss");
           setFeedback(
-            `Too early/late! All red — volume -${VOLUME_STEP * SEQ_LENGTH * 100}% on next ball loop.`,
+            `Too early/late! → volume -${VOLUME_STEP * SEQ_LENGTH * 100}% on next ball loop.`,
           );
         }
         return;
@@ -256,7 +256,7 @@ export function Audition({ value, onChange }: AuditionProps) {
 
       {/* Toast notification */}
       {feedback && (
-        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center">
+        <div className="pointer-events-none fixed inset-x-0 top-2  z-50 flex justify-center">
           <div
             className={`pointer-events-auto max-w-xs rounded-lg border px-4 py-3 text-center text-xs shadow-lg backdrop-blur ${
               lastHit === "perfect"
