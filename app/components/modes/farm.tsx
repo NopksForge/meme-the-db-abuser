@@ -485,7 +485,7 @@ export function Farm({ value, onChange }: FarmProps) {
 
       {/* Bag */}
       {(hasSeedInv || hasHarvest) && (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900/60">
+        <div className="relative z-10 rounded-xl border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900/60">
           {hasSeedInv && (
             <div className="p-3">
               <p className="mb-2 text-[10px] font-medium uppercase tracking-widest text-zinc-400">
