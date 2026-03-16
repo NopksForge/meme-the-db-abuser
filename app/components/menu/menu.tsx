@@ -1,96 +1,9 @@
-type SliderMode =
-  | "normal"
-  | "alphabet"
-  | "random"
-  | "request"
-  | "xo"
-  | "dnd"
-  | "horse_race"
-  | "tinder"
-  | "plinko"
-  | "snake"
-  | "pair"
-  | "car"
-  | "audition"
-  | "farm";
+import { MODES, SliderMode } from "../modes/config";
 
 type MenuProps = {
   activeMode: SliderMode;
   onChange: (mode: SliderMode) => void;
 };
-
-const ITEMS: { id: SliderMode; label: string; description: string }[] = [
-  {
-    id: "normal",
-    label: "Normal",
-    description: "",
-  },
-  {
-    id: "alphabet",
-    label: "Alphabet Order",
-    description: "",
-  },
-  {
-    id: "random",
-    label: "Random",
-    description: "",
-  },
-  {
-    id: "request",
-    label: "Request Form",
-    description: "",
-  },
-  {
-    id: "xo",
-    label: "XO Game",
-    description: "",
-  },
-  {
-    id: "dnd",
-    label: "DnD Dice Roll",
-    description: "",
-  },
-  {
-    id: "horse_race",
-    label: "Horse Race",
-    description: "",
-  },
-  {
-    id: "tinder",
-    label: "Tinder",
-    description: "",
-  },
-  {
-    id: "plinko",
-    label: "Plinko",
-    description: "",
-  },
-  {
-    id: "snake",
-    label: "Snake",
-    description: "",
-  },
-  {
-    id: "pair",
-    label: "Pair",
-    description: "",
-  },
-  {
-    id: "car",
-    label: "Car",
-    description: "",
-  },
-  {
-    id: "audition",
-    label: "Audition",
-    description: "",
-  },
-  {
-    id: "farm",
-    label: "Farm",
-    description: "",
-  },
-];
 
 export function Menu({ activeMode, onChange }: MenuProps) {
   return (
@@ -98,11 +11,11 @@ export function Menu({ activeMode, onChange }: MenuProps) {
       className="flex w-40 flex-col gap-1 rounded-2xl border border-zinc-800/60 bg-zinc-900/70 p-2 text-xs text-zinc-200 backdrop-blur"
       aria-label="Volume adjuster modes"
     >
-      <p className="mb-1 px-1 text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-400">
+      <p className="my-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
         Modes
       </p>
       <ul className="flex flex-col gap-1">
-        {ITEMS.map((item) => {
+        {MODES.map((item) => {
           const isActive = item.id === activeMode;
           return (
             <li key={item.id}>

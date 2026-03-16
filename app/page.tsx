@@ -1,28 +1,13 @@
  "use client";
 import { useEffect, useRef, useState } from "react";
-import { NormalSlider } from "./components/modes/normal_slider";
-import { AlphabetOrderSlider } from "./components/modes/alphabet_order_slider";
+import { MODES, SliderMode } from "./components/modes/config";
 import { Menu } from "./components/menu/menu";
-import { RandomButton } from "./components/modes/random_button";
-import { RequestForm } from "./components/modes/request_form";
-import { XoGame } from "./components/modes/xo";
-import { DndDiceRoll } from "./components/modes/roll_20";
-import { HorseRace } from "./components/modes/horse_race";
-import { Tinder } from "./components/modes/tinder";
-import { Plinko } from "./components/modes/plinko";
-import { Snake } from "./components/modes/snake";
-import { Pair } from "./components/modes/pair";
-import { HoldCar } from "./components/modes/hold_car";
-import { Audition } from "./components/modes/audition";
-import { Farm } from "./components/modes/farm";
 import { Footer } from "./components/footer/footer";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
-  const [mode, setMode] = useState<
-    "normal" | "alphabet" | "random" | "request" | "xo" | "dnd" | "horse_race" | "tinder" | "plinko" | "snake" | "pair" | "car" | "audition" | "farm"
-  >("normal");
+  const [mode, setMode] = useState<SliderMode>(MODES[0]?.id ?? "normal");
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
   useEffect(() => {
@@ -72,48 +57,7 @@ export default function Home() {
             className="hidden"
           />
 
-          {mode === "normal" && (
-            <NormalSlider value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "alphabet" && (
-            <AlphabetOrderSlider value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "random" && (
-            <RandomButton value={volume} onRandom={handleVolumeChange} />
-          )}
-          {mode === "request" && (
-            <RequestForm onSubmit={handleVolumeChange} />
-          )}
-          {mode === "xo" && (
-            <XoGame value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "dnd" && (
-            <DndDiceRoll value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "horse_race" && (
-            <HorseRace value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "tinder" && (
-            <Tinder value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "plinko" && (
-            <Plinko value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "snake" && (
-            <Snake value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "pair" && (
-            <Pair value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "car" && (
-            <HoldCar value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "audition" && (
-            <Audition value={volume} onChange={handleVolumeChange} />
-          )}
-          {mode === "farm" && (
-            <Farm value={volume} onChange={handleVolumeChange} />
-          )}
+          {MODES.find((m) => m.id === mode)?.render(volume, handleVolumeChange)}
         </section>
 
         <Footer />
