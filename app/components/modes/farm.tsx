@@ -491,7 +491,7 @@ export function Farm({ value, onChange }: FarmProps) {
               <p className="mb-2 text-[10px] font-medium uppercase tracking-widest text-zinc-400">
                 Seeds — drag to plot
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex justify-center flex-wrap gap-1.5">
                 {ALL_SEEDS.filter((t) => seedInv[t] > 0).map((type) => {
                   const cfg = SEED_CONFIG[type];
                   const isDraggingThis = activeDrag?.kind === "seed" && activeDrag.seed === type;
@@ -525,7 +525,7 @@ export function Farm({ value, onChange }: FarmProps) {
               <p className="mb-2 text-[10px] font-medium uppercase tracking-widest text-zinc-400">
                 Harvest — click to sell{activePromo?.type === "harvest_bonus" ? " (2×!)" : ""}
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex justify-center flex-wrap gap-1.5">
                 {ALL_SEEDS.filter((t) => harvestInv[t] > 0).map((type) => {
                   const cfg    = SEED_CONFIG[type];
                   const multi  = activePromo?.type === "harvest_bonus" ? 2 : 1;
