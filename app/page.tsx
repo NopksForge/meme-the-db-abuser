@@ -4,6 +4,7 @@ import { MODES, SliderMode } from "./components/modes/config";
 import { Menu } from "./components/menu/menu";
 import { Footer } from "./components/footer/footer";
 import { ThemeToggle } from "./components/theme/theme_toggle";
+import { HallOfFame } from "./components/hall_of_fame/hall_of_fame";
 
 type Theme = "light" | "dark";
 
@@ -85,6 +86,7 @@ export default function Home() {
 
           {MODES.find((m) => m.id === mode)?.render(volume, handleVolumeChange)}
         </section>
+        <HallOfFame mode={mode} />
 
         <Footer />
       </main>
