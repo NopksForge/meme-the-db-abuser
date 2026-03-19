@@ -39,8 +39,8 @@ export function Footer() {
       </footer>
 
       {showToast && (
-        <div 
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-zinc-800 text-white text-sm rounded-lg shadow-lg"
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-lg bg-zinc-800 px-4 py-2 text-sm text-white shadow-lg dark:bg-zinc-100 dark:text-zinc-900"
           style={{ animation: "fadeIn 0.2s ease-out" }}
         >
           Email copied to clipboard!

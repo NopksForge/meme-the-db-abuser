@@ -3,11 +3,33 @@ import { useEffect, useRef, useState } from "react";
 import { MODES, SliderMode } from "./components/modes/config";
 import { Menu } from "./components/menu/menu";
 import { Footer } from "./components/footer/footer";
+import { ThemeToggle } from "./components/theme/theme_toggle";
+
+type Theme = "light" | "dark";
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(0);
   const [mode, setMode] = useState<SliderMode>(MODES[0]?.id ?? "normal");
+  const [theme, setTheme] = useState<Theme>("light");
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+      return;
+    }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark ? "dark" : "light");
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("dark", theme === "dark");
+    root.classList.toggle("light", theme === "light");
+    window.localStorage.setItem("theme", theme);
+  }, [theme]);
 
   // Try to start playback on mount (may still be blocked by browser autoplay policies)
   useEffect(() => {
@@ -32,7 +54,11 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <div className="flex min-h-screen items-center justify-center bg-white font-sans dark:bg-black">
+      <ThemeToggle
+        theme={theme}
+        onToggle={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
+      />
       <Menu activeMode={mode} onChange={setMode} />
       <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 py-20 px-6 bg-white dark:bg-black sm:px-12">
         <div className="hidden sm:block">

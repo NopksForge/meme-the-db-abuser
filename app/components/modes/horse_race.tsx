@@ -187,7 +187,7 @@ export function HorseRace({ value, onChange }: HorseRaceProps) {
                   }}
                   className={[
                     "relative h-6 flex-1 overflow-hidden rounded-full border text-left transition",
-                    "bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-900",
+                    "bg-gradient-to-r dark:from-zinc-900 dark:via-zinc-900/90 dark:to-zinc-900 from-white via-white/90 to-white",
                     "shadow-sm",
                     isPlayerHorse
                       ? "border-emerald-500/80 shadow-[0_0_0_2px_rgba(74,222,128,0.35)]"
@@ -224,7 +224,7 @@ export function HorseRace({ value, onChange }: HorseRaceProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        <label className="flex flex-1 flex-col gap-1 text-xs text-zinc-400">
+        <label className="flex flex-1 flex-col gap-1 text-xs text-zinc-500 dark:text-zinc-400">
           Bet (0-50)
           <input
             type="number"
@@ -234,7 +234,7 @@ export function HorseRace({ value, onChange }: HorseRaceProps) {
             value={bet}
             onChange={(e) => setBet(e.target.value)}
             disabled={isRacing}
-            className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 focus:border-emerald-500"
+            className="w-full rounded-md border border-zinc-700 bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 focus:border-emerald-500 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </label>
 

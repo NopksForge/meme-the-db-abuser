@@ -254,7 +254,7 @@ export function DndDiceRoll({ value, onChange }: DndDiceRollProps) {
           type="button"
           onClick={hasBattled ? handleNextEnemy : handleRoll}
           disabled={isRolling}
-          className="w-full rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-full rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-900 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-70 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
         >
           {hasBattled ? "New Enemy" : "Roll d20"}
         </button>

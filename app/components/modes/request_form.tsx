@@ -123,15 +123,18 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-xs text-zinc-100">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 text-xs text-zinc-900 dark:text-zinc-100"
+    >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="space-y-1">
-          <span className="text-[11px] text-zinc-400">Name</span>
+          <span className="text-[11px] text-zinc-900 dark:text-zinc-400">Name</span>
           <input
             name="name"
             value={form.name}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 ${errors.name ? "border-red-500/80" : "border-zinc-700"}`}
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.name ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.name && (
             <p className="text-[10px] text-red-400">{errors.name}</p>
@@ -139,12 +142,12 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
         </label>
 
         <label className="space-y-1">
-          <span className="text-[11px] text-zinc-400">Surname</span>
+          <span className="text-[11px] text-zinc-900 dark:text-zinc-400">Surname</span>
           <input
             name="surname"
             value={form.surname}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 ${errors.surname ? "border-red-500/80" : "border-zinc-700"}`}
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.surname ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.surname && (
             <p className="text-[10px] text-red-400">{errors.surname}</p>
@@ -152,13 +155,13 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
         </label>
 
         <label className="space-y-1">
-          <span className="text-[11px] text-zinc-400">Age</span>
+          <span className="text-[11px] text-zinc-900 dark:text-zinc-400">Age</span>
           <input
             type="number"
             name="age"
             value={form.age}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 ${errors.age ? "border-red-500/80" : "border-zinc-700"}`}
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.age ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.age && (
             <p className="text-[10px] text-red-400">{errors.age}</p>
@@ -166,13 +169,13 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
         </label>
 
         <label className="space-y-1">
-          <span className="text-[11px] text-zinc-400">Email</span>
+          <span className="text-[11px] text-zinc-900 dark:text-zinc-400">Email</span>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 ${errors.email ? "border-red-500/80" : "border-zinc-700"}`}
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.email ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.email && (
             <p className="text-[10px] text-red-400">{errors.email}</p>
@@ -180,12 +183,12 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
         </label>
 
         <label className="space-y-1 sm:col-span-2">
-          <span className="text-[11px] text-zinc-400">Telephone</span>
+          <span className="text-[11px] text-zinc-900 dark:text-zinc-400">Telephone</span>
           <input
             name="telephone"
             value={form.telephone}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 ${errors.telephone ? "border-red-500/80" : "border-zinc-700"}`}
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.telephone ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.telephone && (
             <p className="text-[10px] text-red-400">{errors.telephone}</p>
@@ -193,7 +196,7 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
         </label>
 
         <label className="space-y-1 sm:col-span-2">
-          <span className="flex items-center justify-between text-[11px] text-zinc-400">
+          <span className="flex items-center justify-between text-[11px] text-zinc-900 dark:text-zinc-400">
             <span>Reason for change request</span>
             <span className="text-zinc-500">{`${form.reason.length}/150`}</span>
           </span>
@@ -202,7 +205,7 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             value={form.reason}
             onChange={handleChange}
             rows={3}
-            className={`w-full rounded-md border bg-zinc-900 px-2 py-1 text-xs text-zinc-100 outline-none ring-0 resize-none ${errors.reason ? "border-red-500/80" : "border-zinc-700"}`}
+            className={`w-full resize-none rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.reason ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.reason && (
             <p className="text-[10px] text-red-400">{errors.reason}</p>
@@ -211,7 +214,7 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
       </div>
 
       <div className="space-y-2">
-        <label className="flex items-center justify-between text-[11px] text-zinc-400">
+        <label className="flex items-center justify-between text-[11px] text-zinc-900 dark:text-zinc-400">
           <span>Volume requested (0–100%)</span>
           <span className="text-zinc-200">{form.volume || "?"}%</span>
         </label>
@@ -222,12 +225,12 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
           max={100}
           value={form.volume}
           onChange={handleChange}
-          className="w-full accent-zinc-100"
+          className="w-full accent-zinc-900 dark:accent-zinc-100"
         />
       </div>
 
       <div className="space-y-2 pt-2 border-t border-zinc-700">
-        <p className="text-[11px] text-zinc-400">Terms & Conditions</p>
+        <p className="text-[11px] text-zinc-900 dark:text-zinc-400">Terms & Conditions</p>
         {CONSENTS.map((text, i) => (
           <label
             key={i}
@@ -239,7 +242,9 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
               onChange={() => toggleConsent(i)}
               className="mt-0.5 accent-zinc-100"
             />
-            <span className="text-[11px] text-zinc-300">{text}</span>
+            <span className="text-[11px] text-zinc-700 dark:text-zinc-300">
+              {text}
+            </span>
           </label>
         ))}
         <label className="flex items-start gap-2 cursor-pointer select-none">
@@ -249,7 +254,7 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             onChange={handleTrapConsent}
             className="mt-0.5 accent-zinc-100"
           />
-          <span className="text-[11px] text-zinc-300">
+          <span className="text-[11px] text-zinc-700 dark:text-zinc-300">
             I have read everything above and{" "}
             <span
               className={`transition-colors duration-300 ${showTrapToast ? "bg-red-500 text-white px-1 rounded" : ""}`}
@@ -267,7 +272,7 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
 
       <button
         type="submit"
-        className="w-full rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-900 transition-colors hover:bg-white"
+        className="w-full rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold text-zinc-900 transition-colors hover:bg-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
       >
         Submit request
       </button>
