@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const INITIAL_FORM = {
   name: "",
@@ -66,34 +66,131 @@ function validate(form: typeof INITIAL_FORM): FieldErrors {
   return errors;
 }
 
+const PLACEHOLDER_VARIANTS = {
+  name: [
+    "e.g. Audio Enjoyer",
+    "e.g. Sir Loudsalot",
+    "e.g. Neighbor’s Nightmare",
+    "e.g. DJ Silence",
+    "e.g. Volumina Maximus",
+    "e.g. Count Decibel",
+    "e.g. Sonic Squire",
+    "e.g. The Quiet Destroyer",
+  ],
+  surname: [
+    "e.g. McVolume",
+    "e.g. Bassline",
+    "e.g. Decibel",
+    "e.g. Trebleman",
+    "e.g. Hertzfeld",
+    "e.g. Wavelet",
+    "e.g. Basso",
+    "e.g. Tremolo",
+  ],
+  age: [
+    "e.g. 67",
+    "e.g. 55",
+    "e.g. 69",
+    "e.g. 123",
+  ],
+  email: [
+    "you@example.com",
+    "noise@my.block",
+    "sorry@neighbors.house",
+    "basshead@boom.com",
+    "quietmode@library.org",
+    "agent.sonic@disco.net",
+    "loudest@arena.zone",
+    "notabot@mail.fake",
+  ],
+  telephone: [
+    "+1 555 0199",
+    "06 12 34 56 78",
+    "(020) 7946 0958",
+    "+44 7000 123456",
+    "123-456-7890",
+    "+81 90-1234-5678",
+    "+358 50 1234567",
+  ],
+  reason: [
+    "Explain in painful detail why the volume must change (150+ chars). The committee reads every word. Twice.",
+    "Start with your life story, pivot to acoustics, end with a plea. Minimum one novella paragraph.",
+    "Describe the spiritual journey that led you to this slider. Be thorough — brevity is invalid.",
+    "Imagine you are Proust. Now explain your need for audio adjustment, using at least three metaphors.",
+    "Consider this your audio manifesto. Persuade us with all your decibels and passion.",
+    "If Beethoven could write this, how would he plead for volume? Channel that energy.",
+    "Describe how the current volume impacts your existence. Hyperbole is encouraged.",
+    "Write a poem about your quest for decibel perfection. Rhymes not required, but appreciated.",
+  ],
+} as const;
+
+type FormFieldKey = keyof typeof INITIAL_FORM;
+
+function pickVariant<T extends readonly string[]>(variants: T): T[number] {
+  return variants[Math.floor(Math.random() * variants.length)]!;
+}
+
 export function RequestForm({ onSubmit }: RequestFormProps) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Partial<Record<FormFieldKey, boolean>>>(
+    {},
+  );
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [placeholders] = useState(() => ({
+    name: pickVariant(PLACEHOLDER_VARIANTS.name),
+    surname: pickVariant(PLACEHOLDER_VARIANTS.surname),
+    age: pickVariant(PLACEHOLDER_VARIANTS.age),
+    email: pickVariant(PLACEHOLDER_VARIANTS.email),
+    telephone: pickVariant(PLACEHOLDER_VARIANTS.telephone),
+    reason: pickVariant(PLACEHOLDER_VARIANTS.reason),
+  }));
   const [consents, setConsents] = useState<boolean[]>(
     CONSENTS.map(() => false),
   );
+  const [consentTouched, setConsentTouched] = useState(false);
   const [consentError, setConsentError] = useState(false);
   const [showTrapToast, setShowTrapToast] = useState(false);
+
+  useEffect(() => {
+    const next = validate(form);
+    const merged: FieldErrors = {};
+    for (const key of Object.keys(INITIAL_FORM) as FormFieldKey[]) {
+      if (submitAttempted || touched[key]) {
+        const err = next[key];
+        if (err) merged[key] = err;
+      }
+    }
+    setErrors(merged);
+  }, [form, touched, submitAttempted]);
+
+  useEffect(() => {
+    if (!consentTouched) return;
+    setConsentError(!consents.every(Boolean));
+  }, [consents, consentTouched]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof FieldErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+  };
+
+  const handleBlur = (field: FormFieldKey) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
   const toggleConsent = (index: number) => {
+    setConsentTouched(true);
     setConsents((prev) => prev.map((c, i) => (i === index ? !c : c)));
-    setConsentError(false);
   };
 
   const handleTrapConsent = () => {
     setForm(INITIAL_FORM);
     setConsents(CONSENTS.map(() => false));
-    setErrors({});
+    setTouched({});
+    setSubmitAttempted(false);
+    setConsentTouched(false);
     setConsentError(false);
     setShowTrapToast(true);
     setTimeout(() => setShowTrapToast(false), 3000);
@@ -101,13 +198,11 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const nextErrors = validate(form);
-    setErrors(nextErrors);
+    setSubmitAttempted(true);
+    setConsentTouched(true);
 
+    const nextErrors = validate(form);
     const allConsentsChecked = consents.every(Boolean);
-    if (!allConsentsChecked) {
-      setConsentError(true);
-    }
 
     if (Object.keys(nextErrors).length > 0 || !allConsentsChecked) {
       return;
@@ -118,7 +213,9 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
     onSubmit(normalized);
     setForm(INITIAL_FORM);
     setConsents(CONSENTS.map(() => false));
-    setErrors({});
+    setTouched({});
+    setSubmitAttempted(false);
+    setConsentTouched(false);
     setConsentError(false);
   };
 
@@ -134,7 +231,10 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             name="name"
             value={form.name}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.name ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
+            onBlur={() => handleBlur("name")}
+            placeholder={placeholders.name}
+            autoComplete="given-name"
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${errors.name ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.name && (
             <p className="text-[10px] text-red-400">{errors.name}</p>
@@ -147,7 +247,10 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             name="surname"
             value={form.surname}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.surname ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
+            onBlur={() => handleBlur("surname")}
+            placeholder={placeholders.surname}
+            autoComplete="family-name"
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${errors.surname ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.surname && (
             <p className="text-[10px] text-red-400">{errors.surname}</p>
@@ -161,7 +264,10 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             name="age"
             value={form.age}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.age ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
+            onBlur={() => handleBlur("age")}
+            placeholder={placeholders.age}
+            autoComplete="off"
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${errors.age ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.age && (
             <p className="text-[10px] text-red-400">{errors.age}</p>
@@ -175,7 +281,10 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             name="email"
             value={form.email}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.email ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
+            onBlur={() => handleBlur("email")}
+            placeholder={placeholders.email}
+            autoComplete="email"
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${errors.email ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.email && (
             <p className="text-[10px] text-red-400">{errors.email}</p>
@@ -188,7 +297,10 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             name="telephone"
             value={form.telephone}
             onChange={handleChange}
-            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.telephone ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
+            onBlur={() => handleBlur("telephone")}
+            placeholder={placeholders.telephone}
+            autoComplete="tel"
+            className={`w-full rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${errors.telephone ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.telephone && (
             <p className="text-[10px] text-red-400">{errors.telephone}</p>
@@ -204,8 +316,10 @@ export function RequestForm({ onSubmit }: RequestFormProps) {
             name="reason"
             value={form.reason}
             onChange={handleChange}
-            rows={3}
-            className={`w-full resize-none rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 dark:bg-zinc-900 dark:text-zinc-100 ${errors.reason ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
+            onBlur={() => handleBlur("reason")}
+            placeholder={placeholders.reason}
+            rows={4}
+            className={`w-full resize-none rounded-md border bg-white px-2 py-1 text-xs text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${errors.reason ? "border-red-500/80" : "border-zinc-300 dark:border-zinc-700"}`}
           />
           {errors.reason && (
             <p className="text-[10px] text-red-400">{errors.reason}</p>
